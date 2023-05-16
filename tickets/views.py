@@ -55,3 +55,25 @@ def FBV_List(request):
             serializer.save()
             return Response(serializer.data, status= status.HTTP_201_CREATED)
         return Response(serializer.data, status= status.HTTP_400_BAD_REQUEST)
+    
+
+# 3.2 GET PUT DELETE
+@api_view(['GET','PUT','DELETE'])
+def FBk_List(request,pk):
+    guest = Guest.objects.get(pk = pk)
+    # GET
+    if request.method == 'GET':
+        serializer = GuestSerializers(guest)
+        return Response(serializer.data)
+    # POST
+    elif request.method == 'PUT':
+        serializer = GuestSerializers(guest, data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status= status.HTTP_201_CREATED)
+        return Response(serializer.data, status= status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+            guest.delete()
+            return Response(serializer.data, status= status.HTTP_201_CREATED)
+    
