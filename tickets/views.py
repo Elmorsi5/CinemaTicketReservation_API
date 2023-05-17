@@ -1,10 +1,11 @@
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from tickets.models import Guest,Movie,Reservation
 from .serializers import GuestSerializers, MovieSerializer,ReservationSerializers
 from rest_framework.decorators import api_view
 from rest_framework import status, filters
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 # Create your views here.
 
@@ -61,10 +62,12 @@ def FBV_List(request):
 @api_view(['GET','PUT','DELETE'])
 def FBk_List(request,pk):
     guest = Guest.objects.get(pk = pk)
+
     # GET
     if request.method == 'GET':
         serializer = GuestSerializers(guest)
         return Response(serializer.data)
+    
     # POST
     elif request.method == 'PUT':
         serializer = GuestSerializers(guest, data= request.data)
@@ -73,7 +76,55 @@ def FBk_List(request,pk):
             return Response(serializer.data, status= status.HTTP_201_CREATED)
         return Response(serializer.data, status= status.HTTP_400_BAD_REQUEST)
     
+        # DELETE
+
     elif request.method == 'DELETE':
             guest.delete()
             return Response(serializer.data, status= status.HTTP_201_CREATED)
     
+
+# 4.1 GET and POST from rest framework Class Based View APIView
+class CBV_List(APIView):
+    def get(self,request):
+        guests = Guest.objects.all()
+        serializer = GuestSerializers(guests,many=True)
+        return Response(serializer.data)
+    
+    def post(self,request):
+        serializer = GuestSerializers(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data,
+                status= status.HTTP_201_CREATED)
+        else:
+            return Response(
+                status= status.HTTP_400_BAD_REQUEST
+            )
+                
+# 4.1 GET, PUT, DELETE from rest framework Class Based View APIView
+
+class CBV_List_PK(APIView):
+    def get_object(self,pk):
+        try:
+            return Guest.objects.get(pk=pk)
+        except Guest.DoesNotExist:
+            raise Http404
+    
+    def get(self,request,pk):
+        guest = self.get_object(pk)
+        serializer = GuestSerializers(guest)
+        return Response(serializer.data)
+    
+    def put(self,request,pk):
+        guest = self.get_object(pk)
+        serializer = GuestSerializers(guest,data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request,pk):
+        guest = self.get_object(pk)
+        guest.delete()
+        return Response(status.HTTP_204_NO_CONTENT)
