@@ -17,5 +17,13 @@ urlpatterns = [
     path("rest/CBV", views.CBV_List.as_view(), name="CBV_List"),
     # 4.2: GET and POST from rest framework, and Class based views
     path("rest/CBV/<int:pk>/", views.CBV_List_PK.as_view(), name="CBV_List_PK"),
-    
+
+
+    # 5.1 GET and POST from rest framework, and Class based views Mixins
+    path("rest/mixins", views.Mixins.as_view(), name="Mixins"),
+
+    # 5.2 GET and POST from rest framework, and Class based views Mixins_pk
+    path("rest/mixins/<int:pk>/", views.Mixins_PK.as_view(), name="Mixins_PK"),
+
+
 ]

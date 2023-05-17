@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework import status, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import generics, mixins, viewsets
+
 
 # Create your views here.
 
@@ -102,7 +104,7 @@ class CBV_List(APIView):
                 status= status.HTTP_400_BAD_REQUEST
             )
                 
-# 4.1 GET, PUT, DELETE from rest framework Class Based View APIView
+# 4.2 GET, PUT, DELETE from rest framework Class Based View APIView
 
 class CBV_List_PK(APIView):
     def get_object(self,pk):
@@ -128,3 +130,30 @@ class CBV_List_PK(APIView):
         guest = self.get_object(pk)
         guest.delete()
         return Response(status.HTTP_204_NO_CONTENT)
+    
+
+# 5.1 GET, POST from rest framework Class Based View mixins:
+
+class Mixins(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+    queryset = Guest.objects.all()
+    serializer_class = GuestSerializers
+    
+    def get(self,request):
+        return self.list(request)
+    def post(self,request):
+        return self.create(request)
+    
+
+# 5.1 GET, POST from rest framework Class Based View mixins:
+
+class Mixins_PK(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
+    queryset = Guest.objects.all()
+    serializer_class = GuestSerializers
+
+    def get(self,request,pk):
+        return self.retrieve(request)
+    def put(self,request,pk):
+        return self.update(request)
+    def delete(self,request,pk):
+        return self.destroy(request)
+
