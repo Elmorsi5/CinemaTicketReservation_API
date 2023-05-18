@@ -1,5 +1,12 @@
-from django.urls import path
+from django.urls import path,include
 from . import views
+from rest_framework.routers import DefaultRouter
+
+# router = DefaultRouter()
+# router.register('guests',viewsets_guest)
+# router.register('movies',viewsets_movie)
+# router.register('reservations',viewsets_reservation)
+
 
 urlpatterns = [
     # 1 Without REST and No model query FBV - CBV
@@ -9,7 +16,7 @@ urlpatterns = [
 
 
     # 3.1: GET and POST from rest framework, and functions based views
-    path("rest/", views.FBV_List, name="FBV_List"),
+    path("rest/FBV", views.FBV_List, name="FBV_List"),
     # 3.2: GET ,PUT and DELETE from rest framework, and functions based views
     path("rest/<int:pk>/", views.FBk_List, name="FBk_List"),
 
@@ -33,6 +40,13 @@ urlpatterns = [
     # 5.2 GET and POST from rest framework, and Class based views Mixins_pk
     path("rest/Generics_PK/<int:pk>", views.Generics_PK.as_view(), name="Generics_PK"),
 
+    # #7 Viewsets
+    # path('rest/viewsets/', include(router.urls)),
 
+    # 8 find movie:
+    path('fbv/findmovie', views.find_movie),
+    path('fbv/new_reservation', views.new_reservation),
 
-]
+    
+    
+    ]

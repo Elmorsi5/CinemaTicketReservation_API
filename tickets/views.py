@@ -6,8 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework import status, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import generics, mixins, viewsets
-
+from rest_framework import generics, mixins
+from rest_framework import viewsets
 
 # Create your views here.
 
@@ -171,3 +171,57 @@ class Generics_PK(generics.RetrieveUpdateDestroyAPIView):
     queryset = Guest.objects.all()
     serializer_class = GuestSerializers
 
+
+# 7 View Sets
+
+# class viewsets_guest(viewsets.ModelViewSet):
+#     queryset = Guest.objects.all()
+#     serializer_class = GuestSerializers
+
+# class viewsets_movie(viewsets.ModelViewSet):
+#     queryset = Guest.objects.all()
+#     serializer_class = GuestSerializers
+
+
+class viewsets_reservation(viewsets.ModelViewSet):
+    queryset = Guest.objects.all()
+    serializer_class = GuestSerializers
+
+
+# 8 find a Movie
+@api_view(['GET'])
+def find_movie(request):
+    movies = Movie.objects.filter(
+        hall = request.data['hall'],
+        Movie = request.data['movie'],
+    )
+    serializer = MovieSerializer(movies, many= True)
+    return Response(serializer.data)
+
+
+#9 create new reservation 
+@api_view(['POST'])
+def new_reservation(request):
+
+    movie = Movie.objects.get(
+        hall = request.data['hall'],
+        Movie = request.data['movie']
+    )
+    guest = Guest()
+    guest.name = request.data['name']
+    guest.mobile = request.data['mobile']
+    guest.save()
+
+    reservation = Reservation()
+    reservation.guest = guest
+    reservation.movie = movie
+    reservation.guest_id = guest.id
+
+    reservation.save()
+
+    # serializer = ReservationSerializers(data= reservation )
+    # if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status= status.HTTP_201_CREATED)
+
+    return Response(status=status.HTTP_201_CREATED)
