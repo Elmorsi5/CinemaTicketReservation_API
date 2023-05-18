@@ -26,4 +26,13 @@ urlpatterns = [
     path("rest/mixins/<int:pk>/", views.Mixins_PK.as_view(), name="Mixins_PK"),
 
 
+    # 5.2 GET and POST from rest framework, and Class based views Mixins_pk
+    path("rest/generic/", views.Generics.as_view(), name="Generics"),
+
+
+    # 5.2 GET and POST from rest framework, and Class based views Mixins_pk
+    path("rest/Generics_PK/<int:pk>", views.Generics_PK.as_view(), name="Generics_PK"),
+
+
+
 ]

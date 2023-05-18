@@ -144,7 +144,7 @@ class Mixins(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIVi
         return self.create(request)
     
 
-# 5.1 GET, POST from rest framework Class Based View mixins:
+# 5.2 GET, POST and CREATE from rest framework Class Based View mixins:
 
 class Mixins_PK(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
     queryset = Guest.objects.all()
@@ -156,4 +156,18 @@ class Mixins_PK(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins.Destroy
         return self.update(request)
     def delete(self,request,pk):
         return self.destroy(request)
+
+
+# 6.1 GET, POST from rest framework Class Based View GENERICS:
+
+class Generics(generics.ListCreateAPIView):
+    queryset = Guest.objects.all()
+    serializer_class = GuestSerializers
+
+
+# 6.2 GET, POST and CREATE from rest framework Class Based View GENERICS:
+
+class Generics_PK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Guest.objects.all()
+    serializer_class = GuestSerializers
 
